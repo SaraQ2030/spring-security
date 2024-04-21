@@ -30,10 +30,15 @@ public class AuthController {
         return ResponseEntity.status(200).body(new ApiREsponse("updated"));
     }
 
-    @DeleteMapping("/delete/{username}")
-    public ResponseEntity delete(@PathVariable String username){
-        authService.deleteUser(username);
+    @DeleteMapping("/delete/{username}/{usernameDel}")
+    public ResponseEntity delete(@PathVariable String username, @PathVariable String usernameDel){
+        authService.deleteUser(username,usernameDel);
         return ResponseEntity.status(200).body(new ApiREsponse("deleted"));
+    }
+    @PostMapping("/login/{username}/{password}")
+    public ResponseEntity login(@PathVariable String username, @PathVariable String password){
+        authService.login(username, password);
+        return ResponseEntity.status(200).body(new ApiREsponse("login"));
     }
 
 

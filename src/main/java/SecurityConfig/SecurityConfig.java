@@ -17,15 +17,16 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final HttpSecurity httpSecurity;
+    //private final HttpSecurity httpSecurity;
     //private final MyUserDetailsService myUserDetailsService;
+    //authentication
     MyUserDetailsService myUserDetailsService;
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(myUserDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+        daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());//for password save it incript
 
         return daoAuthenticationProvider;
     }
@@ -38,7 +39,7 @@ public class SecurityConfig {
                 .and()
                 .authenticationProvider(daoAuthenticationProvider())
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST,"/api/v1/auth/register").permitAll()//* all calss controller
+                .requestMatchers("/api/v1/auth/register").permitAll()//* all class controller
                 .requestMatchers("/api/v1/auth/login","/api/v1/auth/update").permitAll()
                 .requestMatchers("/api/v1/auth/get").hasAuthority("ADMIN") //can I use .has role here ?
                 .requestMatchers("/api/v1/auth/delete/{username}").hasAuthority("ADMIN")
@@ -49,6 +50,21 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .and()
                 .httpBasic();
+
+//        http.csrf().disable()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+//                .and()
+//                .authorizeRequests()
+//                .requestMatchers("/api/v1/auth/register").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .logout()
+//                .logoutUrl("/api/v1/auth/logout")
+//                .deleteCookies("JSESSIONID")
+//                .invalidateHttpSession(true)
+//                .and()
+//                .httpBasic();
 
         return http.build();
     }

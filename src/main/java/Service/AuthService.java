@@ -39,13 +39,23 @@ public class AuthService {
         authRepository.save(u);
     }
 
-    public void deleteUser(String username){
+    public void deleteUser(String username,String usernameDel){
         User u=authRepository.findUserByUsername(username);
+        User uDel=authRepository.findUserByUsername(usernameDel);
+        if (u==null){
+            throw new ApiException("you are not register to the system yet") ;
+        }
+        if (uDel==null){
+            throw new ApiException("this user name not in the system yet " +usernameDel) ;
+        }
+
+        //i should not write this bc it will check in secutity_confi ?
         if (u.getRole().equals("CUSTOMER")) {
             throw new ApiException("you are not autherized ") ;
         }
 
-        authRepository.delete(u);
+
+        authRepository.delete(uDel);
     }
 
 
@@ -54,10 +64,10 @@ public class AuthService {
         if (u==null){
             throw new ApiException("you are not register to the system yet") ;
         }
+else if (u.getPassword().equals(password)){
+    throw new ApiException("you are logged in") ;
+        }
+   }
 
-//        if (username)
-
-    }
-
-    public void logout(String token) {}
+ //   public void logout(String token) {}
 }
